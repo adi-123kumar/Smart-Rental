@@ -1,47 +1,47 @@
 import { useState } from "react";
 import useAuth from "../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
 
 function Register() {
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
-
   const { register } = useAuth();
-  const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    await register(form);
-    navigate("/login");
+    register(name, email, password);
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Register</h2>
+    <div className="p-6">
+      <form onSubmit={handleSubmit} className="max-w-md mx-auto">
+        <input
+          type="text"
+          placeholder="Name"
+          className="w-full p-2 border mb-4"
+          onChange={(e) => setName(e.target.value)}
+        />
 
-      <input
-        type="text"
-        placeholder="Name"
-        onChange={(e) => setForm({ ...form, name: e.target.value })}
-      />
+        <input
+          type="email"
+          placeholder="Email"
+          className="w-full p-2 border mb-4"
+          onChange={(e) => setEmail(e.target.value)}
+        />
 
-      <input
-        type="email"
-        placeholder="Email"
-        onChange={(e) => setForm({ ...form, email: e.target.value })}
-      />
+        <input
+          type="password"
+          placeholder="Password"
+          className="w-full p-2 border mb-4"
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
-      <input
-        type="password"
-        placeholder="Password"
-        onChange={(e) => setForm({ ...form, password: e.target.value })}
-      />
-
-      <button type="submit">Register</button>
-    </form>
+        <button className="bg-green-600 text-white px-4 py-2">
+          Register
+        </button>
+      </form>
+    </div>
   );
 }
 
