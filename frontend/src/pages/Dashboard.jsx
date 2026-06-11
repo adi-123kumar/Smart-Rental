@@ -66,6 +66,12 @@ function Dashboard() {
         >
           Browse Properties
         </Link>
+        <Link
+          to="/add-property"
+          className="bg-green-600 text-white px-6 py-2 rounded"
+        >
+          Add Property
+        </Link>
 
         <button
           onClick={logout}

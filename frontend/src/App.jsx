@@ -9,7 +9,8 @@ import Dashboard from "./pages/Dashboard.jsx";
 import Favorites from "./pages/Favorites.jsx";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
-
+import AddProperty from "./pages/AddProperty.jsx";
+import MyProperties from "./pages/MyProperties";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 function App() {
@@ -31,6 +32,22 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/add-property"
+          element={
+            <ProtectedRoute>
+              <AddProperty />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+  path="/my-properties"
+  element={
+    <ProtectedRoute>
+      <MyProperties />
+    </ProtectedRoute>
+  }
+/>
 
         <Route
           path="/favorites"
@@ -41,14 +58,16 @@ function App() {
           }
         />
         <Route
-  path="/forgot-password"
-  element={<ForgotPassword />}
-/>
+          path="/forgot-password"
+          element={<ForgotPassword />}
+        />
 
-<Route
-  path="/reset-password/:token"
-  element={<ResetPassword />}
-/>
+        <Route
+          path="/reset-password/:token"
+          element={<ResetPassword />}
+        />
+
+
       </Routes>
     </>
   );

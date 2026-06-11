@@ -1,6 +1,5 @@
 import Property from "../models/Property.js";
 
-
 // =============================
 // ADD NEW PROPERTY
 // =============================
@@ -22,7 +21,7 @@ export const addProperty = async (req, res) => {
       type,
       description,
       image,
-      owner: req.user, // from authMiddleware
+      owner: req.user,
     });
 
     res.status(201).json(property);
@@ -33,7 +32,6 @@ export const addProperty = async (req, res) => {
     });
   }
 };
-
 
 // =============================
 // GET ALL PROPERTIES
@@ -57,7 +55,6 @@ export const getAllProperties = async (
   }
 };
 
-
 // =============================
 // GET SINGLE PROPERTY
 // =============================
@@ -74,8 +71,7 @@ export const getSingleProperty =
 
       if (!property) {
         return res.status(404).json({
-          message:
-            "Property not found",
+          message: "Property not found",
         });
       }
 
@@ -87,3 +83,27 @@ export const getSingleProperty =
       });
     }
   };
+
+// =============================
+// GET MY PROPERTIES
+// =============================
+export const getMyProperties = async (
+  req,
+  res
+) => {
+  try {
+    const properties =
+      await Property.find({
+        owner: req.user,
+      }).sort({
+        createdAt: -1,
+      });
+
+    res.json(properties);
+
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};

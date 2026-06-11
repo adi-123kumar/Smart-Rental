@@ -65,21 +65,22 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // 📝 REGISTER
   const register = async (name, email, password) => {
-    try {
-      const { data } = await API.post("/auth/register", {
-        name,
-        email,
-        password,
-      });
+  try {
+    const { data } = await API.post("/auth/register", {
+      name,
+      email,
+      password,
+    });
 
-      return data;
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
+    return data;
+  } catch (error) {
+    console.log("REGISTER ERROR:", error);
+    console.log("BACKEND RESPONSE:", error.response?.data);
+
+    throw error;
+  }
+};
 
   // 🚪 LOGOUT
   const logout = () => {

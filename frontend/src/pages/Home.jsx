@@ -1,53 +1,84 @@
-import { useState } from "react";
-import { propertiesData } from "../utils/dummyData.js";
-import PropertyCard from "../components/PropertyCard.jsx";
-import SearchBar from "../components/SearchBar.jsx";
-import FilterSidebar from "../components/FilterSidebar.jsx";
-import { getRecommendations } from "../utils/recommend.js";
+import { useState, useEffect } from "react";
+import API from "../services/api";
+
+import PropertyCard from "../components/PropertyCard";
+import SearchBar from "../components/SearchBar";
+import FilterSidebar from "../components/FilterSidebar";
+
 function Home() {
-  const [properties, setProperties] = useState(propertiesData);
-  const recommended = getRecommendations(propertiesData);
-  // 🔍 Search
+  const [properties, setProperties] = useState([]);
+  const [allProperties, setAllProperties] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch properties from backend
+  useEffect(() => {
+    fetchProperties();
+  }, []);
+
+  const fetchProperties = async () => {
+    try {
+      const { data } = await API.get("/properties");
+
+      setProperties(data);
+      setAllProperties(data);
+    } catch (error) {
+      console.log(error);
+      alert("Failed to load properties");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Search
   const handleSearch = (location) => {
-    const filtered = propertiesData.filter((p) =>
-      p.location.toLowerCase().includes(location.toLowerCase())
+    const filtered = allProperties.filter((property) =>
+      property.location
+        .toLowerCase()
+        .includes(location.toLowerCase())
     );
+
     setProperties(filtered);
   };
 
-  // 🎯 Filter
+  // Filter
   const handleFilter = ({ price }) => {
-    let filtered = [...propertiesData];
+    let filtered = [...allProperties];
 
     if (price === "low") {
-      filtered = filtered.filter((p) => p.price < 10000);
-    } else if (price === "mid") {
-      filtered = filtered.filter((p) => p.price >= 10000 && p.price <= 20000);
-    } else if (price === "high") {
-      filtered = filtered.filter((p) => p.price > 20000);
+      filtered = filtered.filter(
+        (property) => property.price < 10000
+      );
+    }
+
+    if (price === "mid") {
+      filtered = filtered.filter(
+        (property) =>
+          property.price >= 10000 &&
+          property.price <= 20000
+      );
+    }
+
+    if (price === "high") {
+      filtered = filtered.filter(
+        (property) => property.price > 20000
+      );
     }
 
     setProperties(filtered);
   };
 
+  if (loading) {
+    return (
+      <h1 className="text-center mt-10 text-xl">
+        Loading Properties...
+      </h1>
+    );
+  }
+
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
-      {/* Search */}
       <div className="mb-6">
         <SearchBar onSearch={handleSearch} />
-        {recommended.length > 0 && (
-  <div className="mb-8">
-    <h2 className="text-xl font-bold mb-4">
-      ⭐ Recommended for You
-    </h2>
-
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-      {recommended.map((property) => (
-        <PropertyCard key={property._id} property={property} />
-      ))}
-    </div>
-  </div>
-)}
       </div>
 
       <div className="flex gap-6">
@@ -56,19 +87,22 @@ function Home() {
           <FilterSidebar onFilter={handleFilter} />
         </div>
 
-        {/* Properties */}
+        {/* Property List */}
         <div className="flex-1">
           <h1 className="text-2xl font-bold mb-6">
             Explore Properties
           </h1>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {properties.length > 0 ? (
               properties.map((property) => (
-                <PropertyCard key={property._id} property={property} />
+                <PropertyCard
+                  key={property._id}
+                  property={property}
+                />
               ))
             ) : (
-              <p>No properties found</p>
+              <p>No Properties Found</p>
             )}
           </div>
         </div>

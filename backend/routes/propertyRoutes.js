@@ -5,6 +5,7 @@ import {
   addProperty,
   getAllProperties,
   getSingleProperty,
+  getMyProperties,
 } from "../controllers/propertyController.js";
 
 const router = express.Router();
@@ -12,6 +13,11 @@ const router = express.Router();
 
 // Public routes
 router.get("/", getAllProperties);
+router.get(
+  "/my-properties",
+  authMiddleware,
+  getMyProperties
+);
 router.get("/:id", getSingleProperty);
 
 
