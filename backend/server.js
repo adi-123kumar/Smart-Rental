@@ -2,25 +2,30 @@ import dns from "dns";
 dns.setDefaultResultOrder("ipv4first");
 
 import express from "express";
-import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
-import authMiddleware from "./middleware/authMiddleware.js";
 
+import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
+import propertyRoutes from "./routes/propertyRoutes.js"; // ✅ ADD THIS
+import authMiddleware from "./middleware/authMiddleware.js";
 
 dotenv.config();
 
 const app = express();
 
-// 🔥 MIDDLEWARE (MUST COME FIRST)
+// Middleware
 app.use(cors());
 app.use(express.json());
 
-// ✅ ROUTES (AFTER middleware)
+// Connect DB
+connectDB();
+
+// Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/properties", propertyRoutes); // ✅ ADD THIS
 
-
+// Protected route
 app.get("/api/protected", authMiddleware, (req, res) => {
   res.json({
     message: "You are authorized 🔐",
@@ -33,14 +38,9 @@ app.get("/", (req, res) => {
   res.send("API Running...");
 });
 
-// DB connection
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("✅ MongoDB Connected"))
-  .catch(err => console.log("❌ Error:", err));
-
-// Server start
+// Start server
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`✅ Server running on port ${PORT}`);
 });

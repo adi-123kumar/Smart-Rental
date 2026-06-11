@@ -5,28 +5,33 @@ function Navbar() {
   const { user, logout } = useAuth();
 
   return (
-    <nav style={{ padding: "10px", background: "#222", color: "#fff" }}>
-      <Link to="/" style={{ marginRight: "10px", color: "#fff" }}>
-        Home
+    <nav className="bg-gray-900 text-white px-6 py-4 flex justify-between items-center">
+      <Link to="/" className="text-xl font-bold">
+        Smart Rental
       </Link>
 
-      {user ? (
-        <>
-          <Link to="/dashboard" style={{ marginRight: "10px", color: "#fff" }}>
-            Dashboard
-          </Link>
-          <button onClick={logout}>Logout</button>
-        </>
-      ) : (
-        <>
-          <Link to="/login" style={{ marginRight: "10px", color: "#fff" }}>
-            Login
-          </Link>
-          <Link to="/register" style={{ color: "#fff" }}>
-            Register
-          </Link>
-        </>
-      )}
+      <div className="flex items-center gap-4">
+        <Link to="/">Home</Link>
+
+        {user ? (
+          <>
+            <Link to="/favorites">Favorites</Link>
+            <Link to="/dashboard">Dashboard</Link>
+
+            <button
+              onClick={logout}
+              className="bg-red-500 px-3 py-1 rounded"
+            >
+              Logout
+            </button>
+          </>
+        ) : (
+          <>
+            <Link to="/login">Login</Link>
+            <Link to="/register">Register</Link>
+          </>
+        )}
+      </div>
     </nav>
   );
 }

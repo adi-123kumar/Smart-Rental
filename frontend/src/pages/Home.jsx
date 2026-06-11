@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { propertiesData } from "../utils/dummyData";
-import PropertyCard from "../components/PropertyCard";
-import SearchBar from "../components/SearchBar";
-import FilterSidebar from "../components/FilterSidebar";
-import { getRecommendations } from "../utils/recommend";
+import { propertiesData } from "../utils/dummyData.js";
+import PropertyCard from "../components/PropertyCard.jsx";
+import SearchBar from "../components/SearchBar.jsx";
+import FilterSidebar from "../components/FilterSidebar.jsx";
+import { getRecommendations } from "../utils/recommend.js";
 function Home() {
   const [properties, setProperties] = useState(propertiesData);
   const recommended = getRecommendations(propertiesData);
