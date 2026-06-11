@@ -6,7 +6,11 @@ import {
   getAllProperties,
   getSingleProperty,
   getMyProperties,
+  updateProperty,
+  deleteProperty,
 } from "../controllers/propertyController.js";
+
+import upload from "../middleware/uploadMiddleware.js";
 
 const router = express.Router();
 
@@ -25,7 +29,19 @@ router.get("/:id", getSingleProperty);
 router.post(
   "/",
   authMiddleware,
+  upload.single("image"),
   addProperty
+);
+router.put(
+  "/:id",
+  authMiddleware,
+  updateProperty
+);
+
+router.delete(
+  "/:id",
+  authMiddleware,
+  deleteProperty
 );
 
 export default router;

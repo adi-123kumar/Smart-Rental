@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import API from "../services/api";
 
 function MyProperties() {
@@ -30,6 +31,40 @@ function MyProperties() {
       );
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    const confirmDelete =
+      window.confirm(
+        "Delete this property?"
+      );
+
+    if (!confirmDelete) return;
+
+    try {
+      await API.delete(
+        `/properties/${id}`
+      );
+
+      setProperties(
+        properties.filter(
+          (property) =>
+            property._id !== id
+        )
+      );
+
+      alert(
+        "✅ Property Deleted"
+      );
+
+    } catch (error) {
+      console.log(error);
+
+      alert(
+        error.response?.data?.message ||
+          "Delete failed"
+      );
     }
   };
 
@@ -83,6 +118,27 @@ function MyProperties() {
                 <p className="text-sm text-gray-500 mt-2">
                   {property.type}
                 </p>
+
+                <div className="flex gap-2 mt-4">
+                  <Link
+                    to={`/edit-property/${property._id}`}
+                    className="bg-blue-600 text-white px-3 py-2 rounded"
+                  >
+                    Edit
+                  </Link>
+
+                  <button
+                    onClick={() =>
+                      handleDelete(
+                        property._id
+                      )
+                    }
+                    className="bg-red-600 text-white px-3 py-2 rounded"
+                  >
+                    Delete
+                  </button>
+                </div>
+
               </div>
             </div>
           ))}

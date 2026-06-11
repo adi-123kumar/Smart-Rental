@@ -11,6 +11,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import AddProperty from "./pages/AddProperty.jsx";
 import MyProperties from "./pages/MyProperties";
+import EditProperty from "./pages/EditProperty";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 function App() {
@@ -48,6 +49,15 @@ function App() {
     </ProtectedRoute>
   }
 />
+<Route
+  path="/edit-property/:id"
+  element={
+    <ProtectedRoute>
+      <EditProperty />
+    </ProtectedRoute>
+  }
+/>
+
 
         <Route
           path="/favorites"

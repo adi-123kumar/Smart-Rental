@@ -11,7 +11,7 @@ function AddProperty() {
     price: "",
     type: "",
     description: "",
-    image: "",
+    image: null,
   });
 
   const [loading, setLoading] = useState(false);
@@ -29,8 +29,49 @@ function AddProperty() {
     try {
       setLoading(true);
 
-      await API.post("/properties", formData);
+const propertyData =
+  new FormData();
 
+propertyData.append(
+  "title",
+  formData.title
+);
+
+propertyData.append(
+  "location",
+  formData.location
+);
+
+propertyData.append(
+  "price",
+  formData.price
+);
+
+propertyData.append(
+  "type",
+  formData.type
+);
+
+propertyData.append(
+  "description",
+  formData.description
+);
+
+propertyData.append(
+  "image",
+  formData.image
+);
+
+await API.post(
+  "/properties",
+  propertyData,
+  {
+    headers: {
+      "Content-Type":
+        "multipart/form-data",
+    },
+  }
+);
       alert("✅ Property Added Successfully");
 
       navigate("/");
@@ -39,7 +80,7 @@ function AddProperty() {
 
       alert(
         error.response?.data?.message ||
-          "Failed to add property"
+        "Failed to add property"
       );
     } finally {
       setLoading(false);
@@ -95,11 +136,15 @@ function AddProperty() {
           />
 
           <input
-            type="text"
-            name="image"
-            placeholder="Image URL"
+            type="file"
+            accept="image/*"
             className="w-full border p-3 rounded"
-            onChange={handleChange}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                image: e.target.files[0],
+              })
+            }
           />
 
           <textarea
