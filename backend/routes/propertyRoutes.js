@@ -14,30 +14,34 @@ import upload from "../middleware/uploadMiddleware.js";
 
 const router = express.Router();
 
-
-// Public routes
+// Public Routes
 router.get("/", getAllProperties);
+
 router.get(
   "/my-properties",
   authMiddleware,
   getMyProperties
 );
+
 router.get("/:id", getSingleProperty);
 
-
-// Protected route (must be logged in)
+// Add Property
 router.post(
   "/",
   authMiddleware,
-  upload.single("image"),
+  upload.array("images", 10),
   addProperty
 );
+
+// Update Property
 router.put(
   "/:id",
   authMiddleware,
+  upload.array("images", 10),
   updateProperty
 );
 
+// Delete Property
 router.delete(
   "/:id",
   authMiddleware,

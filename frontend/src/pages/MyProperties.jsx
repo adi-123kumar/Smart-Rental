@@ -27,7 +27,7 @@ function MyProperties() {
 
       alert(
         error.response?.data?.message ||
-          "Failed to load properties"
+        "Failed to load properties"
       );
     } finally {
       setLoading(false);
@@ -63,7 +63,7 @@ function MyProperties() {
 
       alert(
         error.response?.data?.message ||
-          "Delete failed"
+        "Delete failed"
       );
     }
   };
@@ -95,7 +95,7 @@ function MyProperties() {
             >
               <img
                 src={
-                  property.image ||
+                  property.images?.[0] ||
                   "https://via.placeholder.com/400x200"
                 }
                 alt={property.title}

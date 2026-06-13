@@ -31,8 +31,11 @@ function PropertyCard({ property }) {
 
                 {/* Image */}
                 <img
-                    src={property.image || "https://via.placeholder.com/400x200"}
-                    alt="property"
+                    src={
+                        property.images?.[0] ||
+                        "https://via.placeholder.com/400x200"
+                    }
+                    alt={property.title}
                     className="w-full h-48 object-cover"
                 />
 

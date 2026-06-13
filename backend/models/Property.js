@@ -27,9 +27,71 @@ const propertySchema = new mongoose.Schema(
       required: true,
     },
 
-    image: {
+    // Multiple Images
+    images: [
+      {
+        type: String,
+      },
+    ],
+
+    // Property Details
+    bedrooms: {
+      type: Number,
+      default: 1,
+    },
+
+    bathrooms: {
+      type: Number,
+      default: 1,
+    },
+
+    area: {
+      type: Number,
+      default: 0,
+    },
+
+    // Amenities
+    amenities: {
+      wifi: {
+        type: Boolean,
+        default: false,
+      },
+
+      parking: {
+        type: Boolean,
+        default: false,
+      },
+
+      furnished: {
+        type: Boolean,
+        default: false,
+      },
+
+      ac: {
+        type: Boolean,
+        default: false,
+      },
+
+      balcony: {
+        type: Boolean,
+        default: false,
+      },
+
+      powerBackup: {
+        type: Boolean,
+        default: false,
+      },
+    },
+
+    // Availability Status
+    status: {
       type: String,
-      default: "",
+      enum: [
+        "Available",
+        "Booked",
+        "Rented",
+      ],
+      default: "Available",
     },
 
     owner: {
@@ -38,7 +100,9 @@ const propertySchema = new mongoose.Schema(
       required: true,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
 export default mongoose.model(
