@@ -1,16 +1,39 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import API from "../services/api";
 import { trackEvent } from "../utils/track";
+import { motion } from "framer-motion";
 
+import {
+  FaStar,
+  FaWifi,
+  FaParking,
+  FaSnowflake,
+  FaBolt,
+} from "react-icons/fa";
+
+import {
+  MdBalcony,
+  MdChair,
+} from "react-icons/md";
+
+import ReviewForm from "../components/reviews/ReviewForm";
+import ReviewList from "../components/reviews/ReviewList";
 function PropertyDetails() {
   const { id } = useParams();
 
   const [property, setProperty] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [reviews, setReviews] =
+    useState([]);
+
+  const [selectedImage,
+    setSelectedImage] =
+    useState(0);
 
   useEffect(() => {
     fetchProperty();
+    fetchReviews();
   }, []);
 
   const fetchProperty = async () => {
@@ -34,6 +57,21 @@ function PropertyDetails() {
     }
   };
 
+  const fetchReviews =
+    async () => {
+      try {
+        const { data } =
+          await API.get(
+            `/reviews/${id}`
+          );
+
+        setReviews(data);
+
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
   if (loading) {
     return (
       <h1 className="text-center mt-10 text-xl">
@@ -56,36 +94,65 @@ function PropertyDetails() {
       <div className="max-w-6xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
 
         {/* Main Image */}
-        <img
-          src={
-            property.images?.[0] ||
-            "https://via.placeholder.com/1200x500"
-          }
-          alt={property.title}
-          className="w-full h-[450px] object-cover"
-        />
+        <motion.div
+          initial={{
+            opacity: 0,
+          }}
+          animate={{
+            opacity: 1,
+          }}
+        >
+          <img
+            src={
+              property.images?.[
+              selectedImage
+              ] ||
+              "https://via.placeholder.com/1200x500"
+            }
+            alt=""
+            className="
+      w-full
+      h-[500px]
+      object-cover
+    "
+          />
+        </motion.div>
 
         {/* Additional Images */}
-        {property.images?.length > 1 && (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-4">
-            {property.images.map(
-              (image, index) => (
-                <img
-                  key={index}
-                  src={image}
-                  alt={`Property ${index + 1}`}
-                  className="
-                    w-full
-                    h-32
-                    object-cover
-                    rounded-lg
-                    border
-                  "
-                />
-              )
-            )}
-          </div>
-        )}
+        <div className="grid grid-cols-4 gap-3 p-4">
+
+          {property.images?.map(
+            (image, index) => (
+              <motion.img
+                whileHover={{
+                  scale: 1.05,
+                }}
+                key={index}
+                src={image}
+                alt=""
+                onClick={() =>
+                  setSelectedImage(
+                    index
+                  )
+                }
+                className={`
+          h-28
+          w-full
+          object-cover
+          rounded-lg
+          cursor-pointer
+          border-4
+          ${selectedImage ===
+                    index
+                    ? "border-blue-500"
+                    : "border-transparent"
+                  }
+        `}
+              />
+            )
+          )}
+
+        </div>
 
         <div className="p-8">
 
@@ -104,17 +171,39 @@ function PropertyDetails() {
             ₹ {property.price}
           </p>
 
+          <div className="mt-4 flex items-center gap-3">
+
+            <div className="flex items-center gap-1">
+
+              <FaStar className="text-yellow-400" />
+
+              <span className="font-bold">
+                {
+                  property.averageRating
+                }
+              </span>
+
+            </div>
+
+            <span className="text-gray-500">
+              (
+              {
+                property.numReviews
+              } reviews)
+            </span>
+
+          </div>
+
           {/* Status */}
           <div className="mt-4">
             <span
               className={`
                 px-4 py-2 rounded-full text-white
-                ${
-                  property.status ===
+                ${property.status ===
                   "Available"
-                    ? "bg-green-600"
-                    : property.status ===
-                      "Booked"
+                  ? "bg-green-600"
+                  : property.status ===
+                    "Booked"
                     ? "bg-yellow-500"
                     : "bg-red-600"
                 }
@@ -171,38 +260,56 @@ function PropertyDetails() {
           </div>
 
           {/* Amenities */}
-          <div className="mt-8">
-            <h2 className="text-xl font-semibold mb-4">
-              Amenities
-            </h2>
+          <div className="grid md:grid-cols-3 gap-4">
 
-            <div className="grid md:grid-cols-3 gap-3">
-
-              {property.amenities?.wifi && (
-                <div>📶 WiFi</div>
+            {property.amenities
+              ?.wifi && (
+                <div className="flex items-center gap-2">
+                  <FaWifi />
+                  WiFi
+                </div>
               )}
 
-              {property.amenities?.parking && (
-                <div>🚗 Parking</div>
+            {property.amenities
+              ?.parking && (
+                <div className="flex items-center gap-2">
+                  <FaParking />
+                  Parking
+                </div>
               )}
 
-              {property.amenities?.furnished && (
-                <div>🛋 Furnished</div>
+            {property.amenities
+              ?.ac && (
+                <div className="flex items-center gap-2">
+                  <FaSnowflake />
+                  AC
+                </div>
               )}
 
-              {property.amenities?.ac && (
-                <div>❄ AC</div>
+            {property.amenities
+              ?.furnished && (
+                <div className="flex items-center gap-2">
+                  <MdChair />
+                  Furnished
+                </div>
               )}
 
-              {property.amenities?.balcony && (
-                <div>🌇 Balcony</div>
+            {property.amenities
+              ?.balcony && (
+                <div className="flex items-center gap-2">
+                  <MdBalcony />
+                  Balcony
+                </div>
               )}
 
-              {property.amenities?.powerBackup && (
-                <div>⚡ Power Backup</div>
+            {property.amenities
+              ?.powerBackup && (
+                <div className="flex items-center gap-2">
+                  <FaBolt />
+                  Power Backup
+                </div>
               )}
 
-            </div>
           </div>
 
           {/* Property Info */}
@@ -256,26 +363,44 @@ function PropertyDetails() {
           {/* Book Button */}
           <div className="mt-8 border-t pt-6">
 
-            <button
-              className="
-                bg-green-600
-                hover:bg-green-700
-                text-white
-                px-8
-                py-3
-                rounded-lg
-                text-lg
-                font-semibold
-              "
+            <Link
+              to={`/book/${property._id}`}
             >
-              Book Now
-            </button>
-
+              <motion.button
+                whileHover={{
+                  scale: 1.05,
+                }}
+                whileTap={{
+                  scale: 0.95,
+                }}
+                className="
+      bg-blue-600
+      text-white
+      px-8
+      py-3
+      rounded-lg
+      font-semibold
+    "
+              >
+                Book Now
+              </motion.button>
+            </Link>
           </div>
 
         </div>
 
       </div>
+
+      <ReviewForm
+  propertyId={id}
+  refreshReviews={
+    fetchReviews
+  }
+/>
+
+<ReviewList
+  reviews={reviews}
+/>
 
     </div>
   );

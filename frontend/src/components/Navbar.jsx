@@ -35,11 +35,30 @@ function Navbar() {
               My Properties
             </Link>
 
+
+            <Link to="/my-bookings">
+              My Bookings
+            </Link>
+
+            <Link to="/owner-bookings">
+              Booking Requests
+            </Link>
             <Link
               to="/add-property"
               className="bg-green-600 px-3 py-1 rounded hover:bg-green-700"
             >
               Add Property
+            </Link>
+            <Link to="/profile">
+              <img
+                src={
+                  user?.profileImage ||
+                  "https://ui-avatars.com/api/?name=" +
+                  user?.name
+                }
+                alt="profile"
+                className="w-10 h-10 rounded-full object-cover border-2 border-white"
+              />
             </Link>
 
             <button
@@ -51,6 +70,7 @@ function Navbar() {
           </>
         ) : (
           <>
+
             <Link to="/login">
               Login
             </Link>

@@ -13,9 +13,11 @@ export const AuthProvider = ({ children }) => {
 
   // 🔥 Load user on refresh
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    if (storedUser) {
-      setUser(storedUser);
+    const token =
+      localStorage.getItem("token");
+
+    if (token) {
+      fetchProfile();
     }
   }, []);
 
@@ -54,9 +56,12 @@ export const AuthProvider = ({ children }) => {
       });
 
       localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem(
+        "token",
+        data.token
+      );
 
-      setUser(data.user);
+      await fetchProfile();
 
       return data;
     } catch (error) {
@@ -66,21 +71,21 @@ export const AuthProvider = ({ children }) => {
   };
 
   const register = async (name, email, password) => {
-  try {
-    const { data } = await API.post("/auth/register", {
-      name,
-      email,
-      password,
-    });
+    try {
+      const { data } = await API.post("/auth/register", {
+        name,
+        email,
+        password,
+      });
 
-    return data;
-  } catch (error) {
-    console.log("REGISTER ERROR:", error);
-    console.log("BACKEND RESPONSE:", error.response?.data);
+      return data;
+    } catch (error) {
+      console.log("REGISTER ERROR:", error);
+      console.log("BACKEND RESPONSE:", error.response?.data);
 
-    throw error;
-  }
-};
+      throw error;
+    }
+  };
 
   // 🚪 LOGOUT
   const logout = () => {
@@ -89,6 +94,31 @@ export const AuthProvider = ({ children }) => {
     // ❌ Don't remove interactions (important for ML)
 
     setUser(null);
+  };
+
+  const updateUser = (userData) => {
+    setUser(userData);
+
+    localStorage.setItem(
+      "user",
+      JSON.stringify(userData)
+    );
+  };
+  const fetchProfile = async () => {
+    try {
+      const { data } = await API.get(
+        "/users/profile"
+      );
+
+      setUser(data);
+
+      localStorage.setItem(
+        "user",
+        JSON.stringify(data)
+      );
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -100,6 +130,8 @@ export const AuthProvider = ({ children }) => {
         logout,
         favorites,
         toggleFavorite,
+        updateUser,
+        fetchProfile
       }}
     >
       {children}

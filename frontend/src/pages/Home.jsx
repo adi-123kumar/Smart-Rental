@@ -29,6 +29,7 @@ function Home() {
       try {
         setLoading(true);
 
+        
         const query =
           new URLSearchParams(
             filters

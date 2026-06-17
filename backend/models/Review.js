@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const bookingSchema = new mongoose.Schema(
+const reviewSchema = new mongoose.Schema(
   {
     property: {
       type: mongoose.Schema.Types.ObjectId,
@@ -8,26 +8,22 @@ const bookingSchema = new mongoose.Schema(
       required: true,
     },
 
-    tenant: {
+    user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
 
-    owner: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+    rating: {
+      type: Number,
       required: true,
+      min: 1,
+      max: 5,
     },
 
-    status: {
+    comment: {
       type: String,
-      enum: [
-        "Pending",
-        "Approved",
-        "Rejected",
-      ],
-      default: "Pending",
+      required: true,
     },
   },
   {
@@ -36,6 +32,6 @@ const bookingSchema = new mongoose.Schema(
 );
 
 export default mongoose.model(
-  "Booking",
-  bookingSchema
+  "Review",
+  reviewSchema
 );

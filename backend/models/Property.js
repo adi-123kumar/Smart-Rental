@@ -99,6 +99,22 @@ const propertySchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    reviews: [
+  {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Review",
+  },
+],
+
+averageRating: {
+  type: Number,
+  default: 0,
+},
+
+numReviews: {
+  type: Number,
+  default: 0,
+},
   },
   {
     timestamps: true,

@@ -223,8 +223,11 @@ export const getSingleProperty =
           req.params.id
         ).populate(
           "owner",
-          "name email"
-        );
+          "name email profileImage"
+        )
+          .populate({
+            path: "reviews",
+          });
 
       if (!property) {
         return res.status(404).json({
@@ -297,9 +300,9 @@ export const updateProperty =
       const imageUrls =
         req.files?.length
           ? req.files.map(
-              (file) =>
-                file.path
-            )
+            (file) =>
+              file.path
+          )
           : property.images;
 
       const updatedProperty =

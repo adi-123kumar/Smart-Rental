@@ -9,9 +9,9 @@ import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import propertyRoutes from "./routes/propertyRoutes.js"; // ✅ ADD THIS
 import authMiddleware from "./middleware/authMiddleware.js";
-
-
-
+import bookingRoutes from "./routes/bookingRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
+import reviewRoutes from "./routes/reviewRoutes.js";
 const app = express();
 
 // Middleware
@@ -28,7 +28,25 @@ connectDB();
 
 // Routes
 app.use("/api/auth", authRoutes);
-app.use("/api/properties", propertyRoutes); // ✅ ADD THIS
+
+app.use(
+  "/api/users",
+  userRoutes
+);
+
+app.use(
+  "/api/properties",
+  propertyRoutes
+);
+
+app.use(
+  "/api/bookings",
+  bookingRoutes
+);
+app.use(
+  "/api/reviews",
+  reviewRoutes
+);
 
 // Protected route
 app.get("/api/protected", authMiddleware, (req, res) => {

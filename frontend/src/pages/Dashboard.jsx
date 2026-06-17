@@ -9,9 +9,27 @@ function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
-      <h1 className="text-3xl font-bold mb-6">
-        Welcome, {user?.name}
-      </h1>
+      <div className="flex items-center gap-4 mb-6">
+        <img
+          src={
+            user?.profileImage ||
+            "https://ui-avatars.com/api/?name=" +
+            user?.name
+          }
+          alt=""
+          className="w-16 h-16 rounded-full object-cover"
+        />
+
+        <div>
+          <h1 className="text-3xl font-bold">
+            Welcome, {user?.name}
+          </h1>
+
+          <p className="text-gray-500">
+            {user?.email}
+          </p>
+        </div>
+      </div>
 
       {/* Profile Card */}
       <div className="bg-white rounded-xl shadow-md p-6 mb-6">
@@ -71,6 +89,26 @@ function Dashboard() {
           className="bg-green-600 text-white px-6 py-2 rounded"
         >
           Add Property
+        </Link>
+        <Link
+          to="/profile"
+          className="bg-purple-600 text-white px-6 py-2 rounded"
+        >
+          My Profile
+        </Link>
+
+        <Link
+          to="/edit-profile"
+          className="bg-blue-600 text-white px-6 py-2 rounded"
+        >
+          Edit Profile
+        </Link>
+
+        <Link
+          to="/change-password"
+          className="bg-orange-600 text-white px-6 py-2 rounded"
+        >
+          Change Password
         </Link>
 
         <button
