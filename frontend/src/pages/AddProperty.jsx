@@ -160,7 +160,7 @@ function AddProperty() {
 
       alert(
         error.response?.data?.message ||
-          "Failed to add property"
+        "Failed to add property"
       );
     } finally {
       setLoading(false);
@@ -206,14 +206,44 @@ function AddProperty() {
             required
           />
 
-          <input
-            type="text"
+          <select
             name="type"
-            placeholder="Apartment / House / Room"
             className="w-full border p-3 rounded"
             onChange={handleChange}
             required
-          />
+          >
+            <option value="">
+              Select Property Type
+            </option>
+
+            <option value="Apartment">
+              Apartment
+            </option>
+
+            <option value="House">
+              House
+            </option>
+
+            <option value="Villa">
+              Villa
+            </option>
+
+            <option value="PG">
+              PG
+            </option>
+
+            <option value="Hostel">
+              Hostel
+            </option>
+
+            <option value="Office">
+              Office
+            </option>
+
+            <option value="Shop">
+              Shop
+            </option>
+          </select>
 
           <textarea
             name="description"
