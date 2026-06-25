@@ -67,21 +67,21 @@ function Home() {
     fetchProperties(filters);
   };
 
-const handleCategoryClick =
-  (category) => {
+  const handleCategoryClick =
+    (category) => {
 
-    fetchProperties({
-      type: category,
-    });
-
-    document
-      .getElementById(
-        "properties"
-      )
-      ?.scrollIntoView({
-        behavior: "smooth",
+      fetchProperties({
+        type: category,
       });
-  };
+
+      document
+        .getElementById(
+          "properties"
+        )
+        ?.scrollIntoView({
+          behavior: "smooth",
+        });
+    };
   const handleExploreClick = () => {
     const section =
       document.getElementById(
@@ -128,22 +128,35 @@ const handleCategoryClick =
         </div>
 
         {/* Property Listing */}
-        <div id="properties" className="max-w-7xl mx-auto px-6 py-12">
-
-          <div className="flex gap-6">
+        <div
+          id="properties"
+          className="
+    max-w-[1600px]
+    mx-auto
+    px-2
+    py-12
+  "
+        >          <div className="flex gap-4 items-start">
 
             {/* Sidebar */}
-            <div className="w-1/4 hidden lg:block">
+            <div
+              className="
+      w-[320px]
+      hidden
+      lg:block
+      sticky
+      top-20
+      self-start
+      flex-shrink-0
+    "
+            >
               <FilterSidebar
-                onFilter={
-                  handleFilter
-                }
+                onFilter={handleFilter}
               />
             </div>
 
             {/* Properties */}
             <div className="flex-1">
-
               <div className="flex justify-between items-center mb-8">
 
                 <h2 className="text-4xl font-bold">

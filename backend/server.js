@@ -12,6 +12,7 @@ import authMiddleware from "./middleware/authMiddleware.js";
 import bookingRoutes from "./routes/bookingRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import reviewRoutes from "./routes/reviewRoutes.js";
+import paymentRoutes from "./routes/paymentRoutes.js";
 const app = express();
 
 // Middleware
@@ -42,6 +43,10 @@ app.use(
 app.use(
   "/api/bookings",
   bookingRoutes
+);
+app.use(
+  "/api/payments",
+  paymentRoutes
 );
 app.use(
   "/api/reviews",

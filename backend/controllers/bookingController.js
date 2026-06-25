@@ -10,7 +10,35 @@ export const createBooking = async (
   res
 ) => {
   try {
-    const { propertyId } = req.body;
+    const {
+      propertyId,
+
+      fullName,
+      email,
+      phoneNumber,
+      gender,
+      dateOfBirth,
+
+      occupationType,
+      companyName,
+      monthlyIncome,
+
+      idType,
+      idNumber,
+
+      emergencyContactName,
+      emergencyContactPhone,
+
+      moveInDate,
+      leaseDuration,
+      numberOfOccupants,
+
+      hasPets,
+      smokingHabit,
+      vehicleCount,
+
+      tenantMessage,
+    } = req.body;
 
     const property =
       await Property.findById(
@@ -24,7 +52,8 @@ export const createBooking = async (
       });
     }
 
-    // Owner can't book own property
+    // Owner cannot book own property
+
     if (
       property.owner.toString() ===
       req.user
@@ -36,6 +65,7 @@ export const createBooking = async (
     }
 
     // Duplicate booking check
+
     const existingBooking =
       await Booking.findOne({
         property: propertyId,
@@ -52,8 +82,56 @@ export const createBooking = async (
     const booking =
       await Booking.create({
         property: property._id,
+
         tenant: req.user,
+
         owner: property.owner,
+
+        // Personal Details
+
+        fullName,
+        email,
+        phoneNumber,
+        gender,
+        dateOfBirth,
+
+        // Employment
+
+        occupationType,
+        companyName,
+        monthlyIncome,
+
+        // Identity
+
+        idType,
+        idNumber,
+
+        // Emergency Contact
+
+        emergencyContactName,
+        emergencyContactPhone,
+
+        // Rental
+
+        moveInDate,
+        leaseDuration,
+        numberOfOccupants,
+
+        // Lifestyle
+
+        hasPets,
+        smokingHabit,
+        vehicleCount,
+
+        // Financial
+
+        monthlyRent:
+          property.price,
+
+        securityDeposit:
+          property.price * 2,
+
+        tenantMessage,
       });
 
     await User.findByIdAndUpdate(
@@ -87,9 +165,11 @@ export const getMyBookings =
         await Booking.find({
           tenant: req.user,
         })
-          .populate(
-            "property"
-          )
+          .populate("property")
+.populate(
+  "owner",
+  "name email phone"
+)
           .sort({
             createdAt: -1,
           });
@@ -106,32 +186,40 @@ export const getMyBookings =
 // =========================
 // OWNER BOOKINGS
 // =========================
-export const getOwnerBookings =
-  async (req, res) => {
-    try {
-      const bookings =
-        await Booking.find({
-          owner: req.user,
-        })
-          .populate(
-            "property"
-          )
-          .populate(
-            "tenant",
-            "name email"
-          )
-          .sort({
-            createdAt: -1,
-          });
+export const getOwnerBookings = async (
+  req,
+  res
+) => {
+  try {
 
-      res.json(bookings);
-    } catch (error) {
-      res.status(500).json({
-        message:
-          error.message,
-      });
-    }
-  };
+    console.log(
+      "Logged in Owner ID:",
+      req.user
+    );
+
+    const bookings =
+      await Booking.find({
+        owner: req.user,
+      })
+        .populate("property")
+        .populate(
+          "tenant",
+          "name email phone"
+        );
+
+    console.log(
+      "Owner Bookings:",
+      bookings
+    );
+
+    res.json(bookings);
+
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
 
 // =========================
 // APPROVE BOOKING
@@ -162,16 +250,11 @@ export const approveBooking =
       }
 
       booking.status =
-        "Approved";
+"Payment Pending";
 
       await booking.save();
 
-      await Property.findByIdAndUpdate(
-        booking.property,
-        {
-          status: "Booked",
-        }
-      );
+      
 
       res.json({
         message:
@@ -184,6 +267,84 @@ export const approveBooking =
       });
     }
   };
+
+  export const getBookingById = async (
+  req,
+  res
+) => {
+  try {
+    const booking =
+      await Booking.findById(
+        req.params.id
+      )
+        .populate("property")
+        .populate(
+          "tenant",
+          "name email phone"
+        )
+        .populate(
+          "owner",
+          "name email phone"
+        );
+
+    if (!booking) {
+      return res.status(404).json({
+        message:
+          "Booking not found",
+      });
+    }
+
+    res.json(booking);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+export const cancelBooking = async (
+  req,
+  res
+) => {
+  try {
+    const booking =
+      await Booking.findById(
+        req.params.id
+      );
+
+    if (!booking) {
+      return res.status(404).json({
+        message:
+          "Booking not found",
+      });
+    }
+
+    if (
+      booking.tenant.toString() !==
+      req.user
+    ) {
+      return res.status(401).json({
+        message:
+          "Not authorized",
+      });
+    }
+
+    booking.status =
+      "Cancelled";
+
+    await booking.save();
+
+    res.json({
+      message:
+        "Booking cancelled successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message:
+        error.message,
+    });
+  }
+};
 
 // =========================
 // REJECT BOOKING

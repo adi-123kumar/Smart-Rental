@@ -85,6 +85,62 @@ export const loginUser = async (req, res) => {
     });
   }
 };
+export const googleAuth = async (
+  req,
+  res
+) => {
+  try {
+
+    const {
+      name,
+      email,
+      profileImage,
+    } = req.body;
+
+    let user =
+      await User.findOne({
+        email,
+      });
+
+    if (!user) {
+
+      user =
+        await User.create({
+          name,
+          email,
+          password:
+            "GOOGLE_AUTH_USER",
+          profileImage,
+        });
+
+    }
+
+    const token = jwt.sign(
+      {
+        id: user._id,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "7d",
+      }
+    );
+
+    res.status(200).json({
+      token,
+      user,
+    });
+
+  } catch (error) {
+
+    console.log(error);
+
+    res.status(500).json({
+      message:
+        "Google Authentication Failed",
+    });
+
+  }
+};
 
 
 // FORGOT PASSWORD

@@ -59,64 +59,344 @@ function OwnerBookings() {
   return (
     <div className="min-h-screen bg-gray-100 p-6">
 
-      <h1 className="text-3xl font-bold mb-6">
-        Booking Requests
+      <h1 className="text-4xl font-bold mb-8">
+        Rental Applications
       </h1>
 
       {bookings.length === 0 ? (
-        <div className="bg-white p-6 rounded-xl">
-          No requests found
+        <div className="bg-white p-6 rounded-xl shadow">
+          No booking requests found.
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-8">
 
           {bookings.map(
             (booking) => (
               <div
-                key={
-                  booking._id
-                }
-                className="bg-white p-6 rounded-xl shadow"
+                key={booking._id}
+                className="
+                  bg-white
+                  rounded-2xl
+                  shadow-lg
+                  p-8
+                "
               >
-                <h2 className="font-bold text-xl">
-                  {
-                    booking
-                      .property
-                      ?.title
-                  }
-                </h2>
+                {/* Property */}
 
-                <p>
-                  Tenant:
-                  {" "}
-                  {
-                    booking
-                      .tenant
-                      ?.name
-                  }
-                </p>
+                <div className="mb-6">
 
-                <p>
-                  {
-                    booking
-                      .tenant
-                      ?.email
-                  }
-                </p>
-
-                <p className="mt-2">
-                  Status:
-                  {" "}
-                  <strong>
+                  <h2 className="text-2xl font-bold">
                     {
-                      booking.status
+                      booking
+                        .property
+                        ?.title
                     }
-                  </strong>
-                </p>
+                  </h2>
+
+                  <p>
+                    📍
+                    {
+                      booking
+                        .property
+                        ?.location
+                    }
+                  </p>
+
+                  <p>
+                    ₹
+                    {
+                      booking
+                        .property
+                        ?.price
+                    }
+                    /month
+                  </p>
+
+                </div>
+
+                {/* Applicant */}
+
+                <div className="grid md:grid-cols-2 gap-6">
+
+                  <div>
+
+                    <h3 className="font-bold text-lg mb-3">
+                      Personal Details
+                    </h3>
+
+                    <p>
+                      Name:
+                      {" "}
+                      {
+                        booking.fullName
+                      }
+                    </p>
+
+                    <p>
+                      Email:
+                      {" "}
+                      {
+                        booking.email
+                      }
+                    </p>
+
+                    <p>
+                      Phone:
+                      {" "}
+                      {
+                        booking.phoneNumber
+                      }
+                    </p>
+
+                    <p>
+                      Gender:
+                      {" "}
+                      {
+                        booking.gender
+                      }
+                    </p>
+
+                    <p>
+                      DOB:
+                      {" "}
+                      {booking.dateOfBirth
+                        ? new Date(
+                            booking.dateOfBirth
+                          ).toLocaleDateString()
+                        : "-"}
+                    </p>
+
+                  </div>
+
+                  <div>
+
+                    <h3 className="font-bold text-lg mb-3">
+                      Employment
+                    </h3>
+
+                    <p>
+                      Occupation:
+                      {" "}
+                      {
+                        booking.occupationType
+                      }
+                    </p>
+
+                    <p>
+                      Company:
+                      {" "}
+                      {
+                        booking.companyName
+                      }
+                    </p>
+
+                    <p>
+                      Monthly Income:
+                      ₹
+                      {
+                        booking.monthlyIncome
+                      }
+                    </p>
+
+                  </div>
+
+                </div>
+
+                {/* Verification */}
+
+                <div className="grid md:grid-cols-2 gap-6 mt-8">
+
+                  <div>
+
+                    <h3 className="font-bold text-lg mb-3">
+                      Identity
+                    </h3>
+
+                    <p>
+                      Document:
+                      {" "}
+                      {
+                        booking.idType
+                      }
+                    </p>
+
+                    <p>
+                      Number:
+                      {" "}
+                      {
+                        booking.idNumber
+                      }
+                    </p>
+
+                  </div>
+
+                  <div>
+
+                    <h3 className="font-bold text-lg mb-3">
+                      Emergency Contact
+                    </h3>
+
+                    <p>
+                      Name:
+                      {" "}
+                      {
+                        booking.emergencyContactName
+                      }
+                    </p>
+
+                    <p>
+                      Phone:
+                      {" "}
+                      {
+                        booking.emergencyContactPhone
+                      }
+                    </p>
+
+                  </div>
+
+                </div>
+
+                {/* Rental Info */}
+
+                <div className="mt-8">
+
+                  <h3 className="font-bold text-lg mb-3">
+                    Rental Details
+                  </h3>
+
+                  <div className="grid md:grid-cols-3 gap-4">
+
+                    <div>
+                      Move-In:
+                      <br />
+                      <strong>
+                        {new Date(
+                          booking.moveInDate
+                        ).toLocaleDateString()}
+                      </strong>
+                    </div>
+
+                    <div>
+                      Lease:
+                      <br />
+                      <strong>
+                        {
+                          booking.leaseDuration
+                        }
+                        {" "}
+                        Months
+                      </strong>
+                    </div>
+
+                    <div>
+                      Occupants:
+                      <br />
+                      <strong>
+                        {
+                          booking.numberOfOccupants
+                        }
+                      </strong>
+                    </div>
+
+                  </div>
+
+                </div>
+
+                {/* Lifestyle */}
+
+                <div className="mt-8">
+
+                  <h3 className="font-bold text-lg mb-3">
+                    Lifestyle Information
+                  </h3>
+
+                  <div className="grid md:grid-cols-3 gap-4">
+
+                    <p>
+                      Pets:
+                      {" "}
+                      <strong>
+                        {booking.hasPets
+                          ? "Yes"
+                          : "No"}
+                      </strong>
+                    </p>
+
+                    <p>
+                      Smoking:
+                      {" "}
+                      <strong>
+                        {booking.smokingHabit
+                          ? "Yes"
+                          : "No"}
+                      </strong>
+                    </p>
+
+                    <p>
+                      Vehicles:
+                      {" "}
+                      <strong>
+                        {
+                          booking.vehicleCount
+                        }
+                      </strong>
+                    </p>
+
+                  </div>
+
+                </div>
+
+                {/* Message */}
+
+                {booking.tenantMessage && (
+                  <div className="mt-8">
+
+                    <h3 className="font-bold text-lg mb-3">
+                      Message From Tenant
+                    </h3>
+
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      {
+                        booking.tenantMessage
+                      }
+                    </div>
+
+                  </div>
+                )}
+
+                {/* Status */}
+
+                <div className="mt-8">
+
+                  <span
+                    className={`
+                      px-4
+                      py-2
+                      rounded-full
+                      text-white
+                      font-semibold
+
+                      ${
+                        booking.status ===
+                        "Approved"
+                          ? "bg-green-600"
+                          : booking.status ===
+                            "Rejected"
+                          ? "bg-red-600"
+                          : "bg-yellow-500"
+                      }
+                    `}
+                  >
+                    {booking.status}
+                  </span>
+
+                </div>
+
+                {/* Actions */}
 
                 {booking.status ===
                   "Pending" && (
-                  <div className="flex gap-3 mt-4">
+                  <div className="flex gap-4 mt-8">
 
                     <button
                       onClick={() =>
@@ -124,7 +404,14 @@ function OwnerBookings() {
                           booking._id
                         )
                       }
-                      className="bg-green-600 text-white px-4 py-2 rounded"
+                      className="
+                        bg-green-600
+                        hover:bg-green-700
+                        text-white
+                        px-6
+                        py-3
+                        rounded-xl
+                      "
                     >
                       Approve
                     </button>
@@ -135,13 +422,21 @@ function OwnerBookings() {
                           booking._id
                         )
                       }
-                      className="bg-red-600 text-white px-4 py-2 rounded"
+                      className="
+                        bg-red-600
+                        hover:bg-red-700
+                        text-white
+                        px-6
+                        py-3
+                        rounded-xl
+                      "
                     >
                       Reject
                     </button>
 
                   </div>
                 )}
+
               </div>
             )
           )}

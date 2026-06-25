@@ -6,46 +6,79 @@ import {
   createBooking,
   getMyBookings,
   getOwnerBookings,
+  getBookingById,
   approveBooking,
   rejectBooking,
+  cancelBooking,
 } from "../controllers/bookingController.js";
 
-const router =
-  express.Router();
+const router = express.Router();
 
-// Create booking
+/*
+=================================
+TENANT ROUTES
+=================================
+*/
+
+// Create Booking Request
 router.post(
   "/",
   authMiddleware,
   createBooking
 );
 
-// Tenant bookings
+// My Bookings
 router.get(
   "/my-bookings",
   authMiddleware,
   getMyBookings
 );
 
-// Owner bookings
+// Owner Bookings
 router.get(
   "/owner-bookings",
   authMiddleware,
   getOwnerBookings
 );
 
-// Approve booking
+// Cancel Booking
+router.put(
+  "/:id/cancel",
+  authMiddleware,
+  cancelBooking
+);
+
+/*
+=================================
+OWNER ROUTES
+=================================
+*/
+
+// Approve Request
 router.put(
   "/:id/approve",
   authMiddleware,
   approveBooking
 );
 
-// Reject booking
+// Reject Request
 router.put(
   "/:id/reject",
   authMiddleware,
   rejectBooking
+);
+
+/*
+=================================
+KEEP THIS LAST
+=================================
+*/
+
+// Booking Details
+router.get(
+  "/:id",
+  authMiddleware,
+  getBookingById
 );
 
 export default router;

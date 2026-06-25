@@ -1,25 +1,54 @@
 import { createContext, useState, useEffect } from "react";
 import API from "../services/api.js";
 import { trackEvent } from "../utils/track";
+import {
+ signInWithPopup
+}
+from "firebase/auth";
+
+import {
+ auth,
+ googleProvider
+}
+from "../firebase";
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+const [user, setUser] = useState(null);
+const [loading, setLoading] = useState(true);
 
   const [favorites, setFavorites] = useState(
     JSON.parse(localStorage.getItem("favorites")) || []
   );
 
   // 🔥 Load user on refresh
-  useEffect(() => {
+useEffect(() => {
+
+  const initializeAuth = async () => {
+
+    const savedUser =
+      localStorage.getItem("user");
+
+    if (savedUser) {
+      setUser(
+        JSON.parse(savedUser)
+      );
+    }
+
     const token =
       localStorage.getItem("token");
 
     if (token) {
-      fetchProfile();
+      await fetchProfile();
     }
-  }, []);
+
+    setLoading(false);
+  };
+
+  initializeAuth();
+
+}, []);
 
   // 🔥 Save favorites
   useEffect(() => {
@@ -104,30 +133,81 @@ export const AuthProvider = ({ children }) => {
       JSON.stringify(userData)
     );
   };
-  const fetchProfile = async () => {
-    try {
-      const { data } = await API.get(
+
+const googleLogin = async () => {
+  try {
+
+    const result = await signInWithPopup(
+      auth,
+      googleProvider
+    );
+
+    const firebaseUser = {
+      name: result.user.displayName,
+      email: result.user.email,
+      profileImage: result.user.photoURL,
+    };
+
+    const { data } = await API.post(
+      "/auth/google",
+      firebaseUser
+    );
+
+    localStorage.setItem(
+      "token",
+      data.token
+    );
+
+    localStorage.setItem(
+      "user",
+      JSON.stringify(data.user)
+    );
+
+    setUser(data.user);
+
+    return data.user;
+
+  } catch (error) {
+
+    console.log(error);
+
+    throw error;
+  }
+};
+const fetchProfile = async () => {
+  try {
+
+    const { data } =
+      await API.get(
         "/users/profile"
       );
 
-      setUser(data);
+    setUser(data);
 
-      localStorage.setItem(
-        "user",
-        JSON.stringify(data)
-      );
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    localStorage.setItem(
+      "user",
+      JSON.stringify(data)
+    );
+
+    return data;
+
+  } catch (error) {
+
+    console.log(error);
+
+    return null;
+  }
+};
 
   return (
     <AuthContext.Provider
       value={{
         user,
+        loading,
         login,
         register,
         logout,
+        googleLogin,
         favorites,
         toggleFavorite,
         updateUser,

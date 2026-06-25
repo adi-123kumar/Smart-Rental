@@ -19,6 +19,7 @@ import OwnerBookings from "./pages/OwnerBookings";
 import Profile from "./pages/Profile";
 import EditProfile from "./pages/EditProfile";
 import ChangePassword from "./pages/ChangePassword";
+import PaymentPage from "./pages/PaymentPage";
 function App() {
   return (
     <>
@@ -89,6 +90,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        
 
         <Route
           path="/my-bookings"
@@ -107,6 +109,15 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route
+  path="/payment/:bookingId"
+  element={
+    <ProtectedRoute>
+      <PaymentPage />
+    </ProtectedRoute>
+  }
+/>
         <Route
   path="/profile"
   element={

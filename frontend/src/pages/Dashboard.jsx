@@ -1,124 +1,447 @@
 import { Link } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 
+import { motion } from "framer-motion";
+
+import {
+  FaHeart,
+  FaMousePointer,
+  FaPlus,
+  FaUserEdit,
+  FaLock,
+  FaHome,
+  FaSignOutAlt,
+  FaUserCircle,
+} from "react-icons/fa";
+
 function Dashboard() {
-  const { user, favorites, logout } = useAuth();
+  const { user, favorites, logout } =
+    useAuth();
 
   const interactions =
-    JSON.parse(localStorage.getItem("interactions")) || [];
+    JSON.parse(
+      localStorage.getItem(
+        "interactions"
+      )
+    ) || [];
+
+  const stats = [
+    {
+      title:
+        "Favorite Properties",
+      value: favorites.length,
+      icon: <FaHeart />,
+      color:
+        "from-pink-500 to-red-500",
+    },
+
+    {
+      title:
+        "Interactions",
+      value:
+        interactions.length,
+      icon: <FaMousePointer />,
+      color:
+        "from-blue-500 to-cyan-500",
+    },
+  ];
+
+  const actions = [
+    {
+      title:
+        "Favorites",
+      icon: <FaHeart />,
+      link: "/favorites",
+      color:
+        "from-pink-500 to-red-500",
+    },
+
+    {
+      title:
+        "Browse",
+      icon: <FaHome />,
+      link: "/",
+      color:
+        "from-blue-500 to-indigo-500",
+    },
+
+    {
+      title:
+        "Add Property",
+      icon: <FaPlus />,
+      link: "/add-property",
+      color:
+        "from-green-500 to-emerald-500",
+    },
+
+    {
+      title:
+        "Profile",
+      icon: <FaUserCircle />,
+      link: "/profile",
+      color:
+        "from-purple-500 to-fuchsia-500",
+    },
+
+    {
+      title:
+        "Edit Profile",
+      icon: <FaUserEdit />,
+      link: "/edit-profile",
+      color:
+        "from-cyan-500 to-blue-500",
+    },
+
+    {
+      title:
+        "Change Password",
+      icon: <FaLock />,
+      link: "/change-password",
+      color:
+        "from-orange-500 to-amber-500",
+    },
+  ];
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <div className="flex items-center gap-4 mb-6">
-        <img
-          src={
-            user?.profileImage ||
-            "https://ui-avatars.com/api/?name=" +
-            user?.name
-          }
-          alt=""
-          className="w-16 h-16 rounded-full object-cover"
-        />
+    <motion.div
+      initial={{
+        opacity: 0,
+        y: 30,
+      }}
+      animate={{
+        opacity: 1,
+        y: 0,
+      }}
+      transition={{
+        duration: 0.5,
+      }}
+      className="
+        min-h-screen
+        bg-slate-100
+        relative
+        overflow-hidden
+        p-6
+      "
+    >
+      {/* Background Effects */}
 
-        <div>
-          <h1 className="text-3xl font-bold">
-            Welcome, {user?.name}
-          </h1>
+      <div
+        className="
+          absolute
+          top-0
+          left-0
+          w-96
+          h-96
+          bg-blue-500/10
+          rounded-full
+          blur-3xl
+        "
+      />
 
-          <p className="text-gray-500">
-            {user?.email}
-          </p>
+      <div
+        className="
+          absolute
+          bottom-0
+          right-0
+          w-96
+          h-96
+          bg-purple-500/10
+          rounded-full
+          blur-3xl
+        "
+      />
+
+      <div className="max-w-7xl mx-auto relative z-10">
+
+        {/* HERO */}
+
+        <motion.div
+          whileHover={{
+            scale: 1.01,
+          }}
+          className="
+            bg-gradient-to-r
+            from-blue-600
+            via-indigo-600
+            to-purple-600
+            text-white
+            rounded-3xl
+            p-8
+            shadow-2xl
+            mb-8
+          "
+        >
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+
+            <div>
+
+              <h1 className="text-4xl font-bold mb-2">
+                Welcome Back,
+                {" "}
+                {user?.name}
+                👋
+              </h1>
+
+              <p className="text-blue-100">
+                Manage properties,
+                bookings and
+                favorites from
+                one place.
+              </p>
+
+            </div>
+
+            <img
+              src={
+                user?.profileImage ||
+                `https://ui-avatars.com/api/?name=${user?.name}`
+              }
+              alt=""
+              className="
+                w-24
+                h-24
+                rounded-full
+                object-cover
+                border-4
+                border-white
+                shadow-xl
+              "
+            />
+
+          </div>
+        </motion.div>
+
+        {/* PROFILE */}
+
+        <motion.div
+          whileHover={{
+            y: -5,
+          }}
+          className="
+            bg-white/70
+            backdrop-blur-xl
+            rounded-3xl
+            p-6
+            shadow-xl
+            mb-8
+          "
+        >
+          <h2 className="text-2xl font-bold mb-4">
+            Profile Overview
+          </h2>
+
+          <div className="grid md:grid-cols-2 gap-4">
+
+            <div>
+              <p className="text-gray-500">
+                Full Name
+              </p>
+
+              <p className="font-semibold text-lg">
+                {user?.name}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-gray-500">
+                Email
+              </p>
+
+              <p className="font-semibold text-lg">
+                {user?.email}
+              </p>
+            </div>
+
+          </div>
+        </motion.div>
+
+        {/* STATS */}
+
+        <div className="grid md:grid-cols-2 gap-6 mb-8">
+
+          {stats.map(
+            (
+              stat,
+              index
+            ) => (
+              <motion.div
+                key={index}
+                whileHover={{
+                  y: -10,
+                  scale: 1.03,
+                }}
+                className={`
+                  bg-gradient-to-r
+                  ${stat.color}
+                  text-white
+                  rounded-3xl
+                  p-6
+                  shadow-xl
+                `}
+              >
+                <div className="flex justify-between items-center">
+
+                  <div>
+
+                    <p className="text-white/80">
+                      {stat.title}
+                    </p>
+
+                    <h2 className="text-4xl font-bold mt-2">
+                      {stat.value}
+                    </h2>
+
+                  </div>
+
+                  <div className="text-5xl opacity-80">
+                    {stat.icon}
+                  </div>
+
+                </div>
+              </motion.div>
+            )
+          )}
+
         </div>
-      </div>
 
-      {/* Profile Card */}
-      <div className="bg-white rounded-xl shadow-md p-6 mb-6">
-        <h2 className="text-xl font-semibold mb-4">
-          Profile Information
-        </h2>
+        {/* QUICK ACTIONS */}
 
-        <p className="mb-2">
-          <span className="font-medium">Name:</span>{" "}
-          {user?.name}
-        </p>
+        <div className="mb-8">
 
-        <p>
-          <span className="font-medium">Email:</span>{" "}
-          {user?.email}
-        </p>
-      </div>
+          <h2 className="text-2xl font-bold mb-5">
+            Quick Actions
+          </h2>
 
-      {/* Stats */}
-      <div className="grid md:grid-cols-2 gap-6 mb-6">
-        <div className="bg-white rounded-xl shadow-md p-6">
-          <h3 className="text-lg font-semibold">
-            Favorite Properties
-          </h3>
-          <p className="text-3xl font-bold text-blue-600 mt-2">
-            {favorites.length}
-          </p>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+            {actions.map(
+              (
+                action,
+                index
+              ) => (
+                <Link
+                  key={index}
+                  to={
+                    action.link
+                  }
+                >
+                  <motion.div
+                    whileHover={{
+                      y: -8,
+                      scale: 1.03,
+                    }}
+                    whileTap={{
+                      scale: 0.97,
+                    }}
+                    className={`
+                      bg-gradient-to-r
+                      ${action.color}
+                      text-white
+                      rounded-3xl
+                      p-6
+                      shadow-xl
+                      cursor-pointer
+                    `}
+                  >
+                    <div className="text-4xl mb-4">
+                      {
+                        action.icon
+                      }
+                    </div>
+
+                    <h3 className="text-xl font-bold">
+                      {
+                        action.title
+                      }
+                    </h3>
+
+                  </motion.div>
+                </Link>
+              )
+            )}
+
+          </div>
+
         </div>
 
-        <div className="bg-white rounded-xl shadow-md p-6">
-          <h3 className="text-lg font-semibold">
-            Total Interactions
-          </h3>
-          <p className="text-3xl font-bold text-green-600 mt-2">
-            {interactions.length}
-          </p>
-        </div>
-      </div>
+        {/* ACTIVITY */}
 
-      {/* Quick Actions */}
-      <div className="flex flex-wrap gap-4">
-        <Link
-          to="/favorites"
-          className="bg-blue-600 text-white px-6 py-2 rounded"
+        <motion.div
+          whileHover={{
+            y: -5,
+          }}
+          className="
+            bg-white
+            rounded-3xl
+            shadow-xl
+            p-6
+            mb-8
+          "
         >
-          View Favorites
-        </Link>
+          <h2 className="text-2xl font-bold mb-5">
+            Recent Activity
+          </h2>
 
-        <Link
-          to="/"
-          className="bg-gray-700 text-white px-6 py-2 rounded"
-        >
-          Browse Properties
-        </Link>
-        <Link
-          to="/add-property"
-          className="bg-green-600 text-white px-6 py-2 rounded"
-        >
-          Add Property
-        </Link>
-        <Link
-          to="/profile"
-          className="bg-purple-600 text-white px-6 py-2 rounded"
-        >
-          My Profile
-        </Link>
+          <div className="space-y-4">
 
-        <Link
-          to="/edit-profile"
-          className="bg-blue-600 text-white px-6 py-2 rounded"
-        >
-          Edit Profile
-        </Link>
+            <div className="flex gap-3">
+              <div className="w-3 h-3 rounded-full bg-blue-500 mt-2" />
+              <p>
+                Viewed
+                {" "}
+                {
+                  interactions.length
+                }
+                {" "}
+                properties recently.
+              </p>
+            </div>
 
-        <Link
-          to="/change-password"
-          className="bg-orange-600 text-white px-6 py-2 rounded"
-        >
-          Change Password
-        </Link>
+            <div className="flex gap-3">
+              <div className="w-3 h-3 rounded-full bg-pink-500 mt-2" />
+              <p>
+                Saved
+                {" "}
+                {
+                  favorites.length
+                }
+                {" "}
+                favorite properties.
+              </p>
+            </div>
 
-        <button
+          </div>
+        </motion.div>
+
+        {/* LOGOUT */}
+
+        <motion.button
+          whileHover={{
+            scale: 1.05,
+          }}
+          whileTap={{
+            scale: 0.95,
+          }}
           onClick={logout}
-          className="bg-red-500 text-white px-6 py-2 rounded"
+          className="
+            flex
+            items-center
+            gap-3
+            bg-red-600
+            hover:bg-red-700
+            text-white
+            px-8
+            py-4
+            rounded-2xl
+            shadow-xl
+          "
         >
+          <FaSignOutAlt />
           Logout
-        </button>
+        </motion.button>
+
       </div>
-    </div>
+    </motion.div>
   );
 }
 
