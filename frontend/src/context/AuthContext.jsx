@@ -22,7 +22,7 @@ const [loading, setLoading] = useState(true);
     JSON.parse(localStorage.getItem("favorites")) || []
   );
 
-  // 🔥 Load user on refresh
+  //  Load user on refresh
 useEffect(() => {
 
   const initializeAuth = async () => {
